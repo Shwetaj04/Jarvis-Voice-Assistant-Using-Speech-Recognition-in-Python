@@ -1,0 +1,4 @@
+.venv/
+Jarvis in Python_files/
+*.html
+__pycache__/
