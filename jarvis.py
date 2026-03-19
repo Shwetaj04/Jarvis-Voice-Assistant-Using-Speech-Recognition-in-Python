@@ -10,10 +10,22 @@ load_dotenv()
 
 API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=API_KEY)
-
+for m in genai.list_models():
+    if "generateContent" in m.supported_generation_methods:
+        print(m.name)
+model = genai.GenerativeModel("models/gemini-flash-latest")
 #initializing voice engine
 engine=pyttsx3.init()
 engine.setProperty('rate',170)
+
+def ask_ai(prompt):
+    try:
+        response = model.generate_content(prompt)
+        return response.text[:200]   # limit for speech
+    except Exception as e:
+        print("AI Error:", e)
+        return "Sorry, I couldn't process that."
+
 
 def speak(text):
     
@@ -78,4 +90,5 @@ while True:
         break
 
     else:
-        speak("Sorry, I don't know how to respond to that yet.")
+        reply = ask_ai(command)
+        speak(reply)
